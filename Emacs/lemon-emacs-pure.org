@@ -68,6 +68,18 @@ Center display
   (require 'visual-fill-column)
 #+end_src
 
+Input Method
+#+begin_src emacs-lisp
+  (lemon/ensure-package 'pyim)
+  (lemon/ensure-package 'pyim-basedict)
+  (lemon/ensure-package 'popup)
+  (require 'pyim)
+  (require 'pyim-basedict)
+  (require 'popup)
+  (pyim-basedict-enable)
+  (setq pyim-page-tooltip 'popup)
+#+end_src
+
 * Directory Navigation & File Access
 
 Dired mode need some setup.
@@ -354,6 +366,10 @@ AUCTeX.
   (add-hook 'LaTeX-mode-hook (lambda ()
   			     (setq fill-column 80)
   			     (display-fill-column-indicator-mode 80)))
+  (add-hook 'LaTeX-mode-hook (lambda ()
+  			     (setq visual-fill-column-width 120
+  				   visual-fill-column-center-text t)
+  			     (visual-line-fill-column-mode 1)))
   (add-hook 'TeX-after-insert-macro (lambda ()
   				    (save-excursion
   				      (backward-char 2)
