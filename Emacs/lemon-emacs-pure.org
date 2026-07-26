@@ -233,10 +233,10 @@ lsp-mode for general language support.
   (setq lsp-keymap-prefix "C-c l")
 
   (require 'lsp-mode)
-  (add-hook 'haskell-mode-hook #'lsp-mode)
-  (add-hook 'haskell-literate-mode-hook #'lsp-mode)
-  (add-hook 'rust-mode-hook #'lsp-mode)
 
+  (lemon/ensure-package 'lsp-ui)
+  (require 'lsp-ui)
+  
   (with-eval-after-load 'lsp-mode
     (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 #+end_src
@@ -259,6 +259,8 @@ company autocompletion.
   (setq lsp-rename-use-prepare nil) ; https://github.com/emacs-lsp/lsp-mode/issues/4473#issuecomment-2308978908
 
   (lemon/ensure-package 'haskell-mode)
+  (add-hook 'haskell-mode-hook #'lsp-mode)
+  (add-hook 'haskell-literate-mode-hook #'lsp-mode)
   (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 #+end_src
 
@@ -274,6 +276,20 @@ company autocompletion.
 ** OCaml
 #+begin_src emacs-lisp
   (lemon/ensure-package 'tuareg)
+  (require 'tuareg)
+
+  (lemon/ensure-package 'utop)
+  (require 'utop)
+
+  (add-to-list 'load-path "opam-location/.opam/default/share/emacs/site-lisp")
+  (require 'ocp-indent)
+
+  (lemon/ensure-package 'ocaml-eglot)
+  (autoload #'ocaml-eglot "ocaml-eglot" nil t)
+  (autoload #'eglot-ensure "ocaml-eglot" nil t)
+  (add-hook 'tuareg-mode-hook #'ocaml-eglot)
+  (add-hook 'tuareg-mode-hook #'company-mode)
+  (add-hook 'ocaml-eglot-mode-hook #'eglot-ensure)
 #+end_src
 
 ** Rocq / Coq
@@ -315,6 +331,12 @@ company autocompletion.
                                           :weight normal))
     (buffer-face-mode))
   (add-hook 'agda2-mode-hook 'agda-buffer-face-mode)
+#+end_src
+
+** Rust
+
+#+begin_src emacs-lisp
+  (add-hook 'rust-mode-hook #'lsp-mode)
 #+end_src
 
 * TeX
