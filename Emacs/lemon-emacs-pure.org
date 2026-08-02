@@ -245,12 +245,14 @@ lsp-mode for general language support.
   (setq lsp-keymap-prefix "C-c l")
 
   (require 'lsp-mode)
+  (with-eval-after-load 'lsp-mode
+    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
   (lemon/ensure-package 'lsp-ui)
   (require 'lsp-ui)
-  
-  (with-eval-after-load 'lsp-mode
-    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+  (setq lsp-ui-sideline-show-diagnostics nil)
+  ;; (setq lsp-ui-sideline-ignore-duplicate t)
+  ;; (setq lsp-ui-sideline-diagnostic-max-lines 3)
 #+end_src
 
 company autocompletion.
