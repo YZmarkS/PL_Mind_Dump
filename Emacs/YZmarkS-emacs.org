@@ -211,7 +211,8 @@ Add ligature.
                                          "=:=" "==" "===" "=/=" "/=" "/==" "//=" "!=" "!==" "=!="
 
                                          "::" ":::"
-                                         "<:" ":<" ":>" ">:" "<:<" ":?>"
+                                         "<:" ; ":<"
+  				       ":>" ">:" "<:<" ":?>"
 
                                          "|>" "<|" "||>" "<||" "|||>" "<|||"
 
@@ -249,14 +250,15 @@ lsp-mode for general language support.
     (setq lsp-keymap-prefix "C-c l")
     :hook
     (((haskell-mode haskell-literate-mode) . lsp) ; Haskell
-     ((tsx-ts-mode typescript-ts-mode js-ts-mode) . lsp)
+     ((js-ts-mode typescript-ts-mode tsx-ts-mode svelte-mode) . lsp)
      (python-mode . lsp)			; Python
      (java-mode . lsp)			; Java
      (lsp-mode . lsp-enable-which-key-integration)
      (lsp-mode . lsp-lens-mode))
     :config
     ;; https://github.com/emacs-lsp/lsp-mode/issues/4473#issuecomment-2308978908
-    (setq lsp-rename-use-prepare nil)
+    (setq lsp-rename-use-prepare nil
+  	lsp-disabled-clients '(tailwindcss))
     ;; https://github.com/emacs-lsp/lsp-mode/blob/e15b8205cbd0369df40b412909eb3ed3264e96a2/clients/lsp-javascript.el#L122
     ;; I don't know what drug npm is on, it refused to download tsserver globally
     ;; But it downloads a tsserver in the local project
@@ -384,12 +386,14 @@ company autocompletion.
 Add treesitter grammar if missing.
 #+begin_src emacs-lisp
   (dolist (grammar
-           '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.25.0"))
+           '((typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.2" "typescript/src"))
+  	   (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.25.0" "src"))
+  	   (css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.25.0"))
              (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.23.2"))
-             (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.25.0" "src"))
              (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.24.8"))
              (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.2" "tsx/src"))
-             (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.2" "typescript/src"))))
+  	   (svelte . ("https://github.com/tree-sitter-grammars/tree-sitter-svelte"))
+             ))
     (add-to-list 'treesit-language-source-alist grammar)
     ;; Only install `grammar' if we don't already have it
     ;; installed. However, if you want to *update* a grammar then
@@ -402,12 +406,13 @@ Recognize file extensions.
 #+begin_src emacs-lisp
   (dolist
       (pair
-       '(("\\.tsx\\'" . tsx-ts-mode)
+       '(
+         ("\\.ts\\'"  . typescript-ts-mode)
          ("\\.js\\'"  . typescript-ts-mode)
          ("\\.mjs\\'" . typescript-ts-mode)
          ("\\.mts\\'" . typescript-ts-mode)
          ("\\.cjs\\'" . typescript-ts-mode)
-         ("\\.ts\\'"  . typescript-ts-mode)
+         ("\\.tsx\\'" . tsx-ts-mode)
          ("\\.jsx\\'" . tsx-ts-mode)
          ("\\.json\\'" .  json-ts-mode)
          ("\\.Dockerfile\\'" . dockerfile-ts-mode)
@@ -417,6 +422,9 @@ Recognize file extensions.
 
 #+begin_src emacs-lisp
   (use-package typescript-mode
+    :defer t)
+
+  (use-package svelte-mode
     :defer t)
 #+end_src
 
@@ -444,8 +452,13 @@ AUCTeX.
     (setq TeX-auto-save t
           TeX-parse-self t))
 
-  ;; (setq TeX-fold-auto t
-  ;;       TeX-fold-type-list '(macro math))
+  		   )))
+        :config
+        (setq TeX-auto-save t
+              TeX-parse-self t))
+
+      ;; (setq TeX-fold-auto t
+      ;;       TeX-fold-type-list '(macro math))
 #+end_src
 
 * Org mode
