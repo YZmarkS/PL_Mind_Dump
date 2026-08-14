@@ -431,9 +431,15 @@ AUCTeX.
      (LaTeX-mode . flyspell-mode)
      (LaTeX-mode . reftex-mode)
      (LaTeX-mode . (lambda ()
+  		   ;; Show whitespace and auto wrap
   		   (setq show-trailing-whitespace t
-  			 fill-column 80
-  			 display-fill-column-indicator-mode 80))))
+  			 fill-column 80)
+  		   (auto-fill-mode)
+  		   (display-fill-column-indicator-mode)
+  		   ;; Center text, with some padding
+  		   (setq visual-fill-column-width 120
+  			 visual-fill-column-center-text t)
+  		   (visual-line-fill-column-mode))))
     :config
     (setq TeX-auto-save t
           TeX-parse-self t))
