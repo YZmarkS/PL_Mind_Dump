@@ -247,7 +247,8 @@ lsp-mode for general language support.
     :commands
     (lsp lsp-deferred)
     :init
-    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-keymap-prefix "C-c l"
+  	lsp-tailwindcss-add-on-mode t)
     :hook
     (((haskell-mode haskell-literate-mode) . lsp) ; Haskell
      ((js-ts-mode typescript-ts-mode tsx-ts-mode svelte-mode) . lsp)
@@ -451,14 +452,8 @@ AUCTeX.
     :config
     (setq TeX-auto-save t
           TeX-parse-self t))
-
-  		   )))
-        :config
-        (setq TeX-auto-save t
-              TeX-parse-self t))
-
-      ;; (setq TeX-fold-auto t
-      ;;       TeX-fold-type-list '(macro math))
+  ;; (setq TeX-fold-auto t
+  ;;       TeX-fold-type-list '(macro math))
 #+end_src
 
 * Org mode
@@ -623,6 +618,27 @@ Hook.
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook #'YZmarkS/org-mode-setup)
   (add-hook 'org-mode-hook #'flyspell-mode)
+  (add-hook 'org-mode-hook #'company-mode)
+
+  (use-package htmlize
+    :defer t)
+#+end_src
+
+** Org Roam
+
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :config
+    ;; Node completion shows title and file name
+    (setq org-roam-node-display-template
+  	(concat "${title:*} " "${file:*}"))
+    ;; New node initialize with title keyword
+    (setq org-roam-capture-templates
+  	'(("d" "default" plain "%?"
+  	   :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}")
+  	   :unnarrowed t)))
+    ;; (setq find-file-visit-truename t)
+    )
 #+end_src
 
 * Magit
