@@ -265,7 +265,6 @@ lsp-mode for general language support.
     ;; But it downloads a tsserver in the local project
     (setq lsp-clients-typescript-prefer-use-project-ts-server t))
 
-
   (use-package lsp-ui
     :defer t
     :commands lsp-ui-mode
@@ -299,7 +298,8 @@ company autocompletion.
     :defer t
     :hook
     ((haskell-mode . interactive-haskell-mode)
-     (interactive-haskell-mode . (lambda () (diminish 'interactive-haskell-mode)))))
+     (interactive-haskell-mode . (lambda () (diminish 'interactive-haskell-mode)))
+     (haskell-mode . turn-on-haskell-indent)))
 #+end_src
 
 ** OCaml
@@ -649,6 +649,7 @@ Hook.
 #+end_src
 
 * Treemac
+
 #+begin_src emacs-lisp
   (use-package treemacs
     :defer t)
