@@ -295,12 +295,12 @@ company autocompletion.
 ** Haskell
 
 #+begin_src emacs-lisp
-    (use-package haskell-mode
-      :defer t
-      :hook
-      ((haskell-mode . interactive-haskell-mode)
-       (interactive-haskell-mode . (lambda () (diminish 'interactive-haskell-mode)))
-       (haskell-mode . turn-on-haskell-indent)))
+  (use-package haskell-mode
+    :defer t
+    :hook
+    ((haskell-mode . interactive-haskell-mode)
+     (interactive-haskell-mode . (lambda () (diminish 'interactive-haskell-mode)))
+     (haskell-mode . turn-on-haskell-indent)))
 #+end_src
 
 ** OCaml
