@@ -259,6 +259,7 @@ lsp-mode for general language support.
     :config
     ;; https://github.com/emacs-lsp/lsp-mode/issues/4473#issuecomment-2308978908
     (setq lsp-rename-use-prepare nil
+  	lsp-haskell-plugin-rename-config-cross-module t
   	lsp-disabled-clients '(tailwindcss))
     ;; https://github.com/emacs-lsp/lsp-mode/blob/e15b8205cbd0369df40b412909eb3ed3264e96a2/clients/lsp-javascript.el#L122
     ;; I don't know what drug npm is on, it refused to download tsserver globally
@@ -294,12 +295,12 @@ company autocompletion.
 ** Haskell
 
 #+begin_src emacs-lisp
-  (use-package haskell-mode
-    :defer t
-    :hook
-    ((haskell-mode . interactive-haskell-mode)
-     (interactive-haskell-mode . (lambda () (diminish 'interactive-haskell-mode)))
-     (haskell-mode . turn-on-haskell-indent)))
+    (use-package haskell-mode
+      :defer t
+      :hook
+      ((haskell-mode . interactive-haskell-mode)
+       (interactive-haskell-mode . (lambda () (diminish 'interactive-haskell-mode)))
+       (haskell-mode . turn-on-haskell-indent)))
 #+end_src
 
 ** OCaml
@@ -452,6 +453,7 @@ AUCTeX.
     :config
     (setq TeX-auto-save t
           TeX-parse-self t))
+
   ;; (setq TeX-fold-auto t
   ;;       TeX-fold-type-list '(macro math))
 #+end_src
@@ -618,7 +620,10 @@ Hook.
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook #'YZmarkS/org-mode-setup)
   (add-hook 'org-mode-hook #'flyspell-mode)
-  (add-hook 'org-mode-hook #'company-mode)
+  (add-hook 'org-mode-hook (lambda ()
+  			   (setq-local company-minimum-prefix-length 5
+  				       company-idle-delay 0.2)
+  			   (company-mode)))
 
   (use-package htmlize
     :defer t)
