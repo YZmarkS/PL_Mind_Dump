@@ -28,7 +28,7 @@ We want to check if there is a local list of packages available, if not, get it.
   (require 'package)
 
   (unless package-archive-contents
-      (package-refresh-contents))
+    (package-refresh-contents))
 
   (require 'use-package-ensure)	
   (setq use-package-always-ensure t)	; Always ensure package is downloaded
@@ -38,12 +38,12 @@ We want to check if there is a local list of packages available, if not, get it.
 
 First customize appearance.
 #+begin_src emacs-lisp
-  (tool-bar-mode -1)			; No toolbar
+  (tool-bar-mode -1)			; No tool bar
   (menu-bar-mode -1)			; No menu bar
-  (setq visible-bell t)		; No flash when error
+  (setq visible-bell t)			; Flash on error
 
-  (when window-system		        ; Only in GUI mode
-    (global-hl-line-mode 1)		; hl in dark mode terminal blends with text
+  (when window-system	   ; If in GUI
+    (global-hl-line-mode 1)  ; hl in dark mode terminal blends with text
     (setq hl-line-sticky-flag nil))	; Only highlight in the focused window
 
   (setq inhibit-startup-screen t)	; No startup
@@ -55,11 +55,16 @@ Setup window splitting behaviour.
         split-height-threshold nil) 	; Always split horizontally
 #+end_src
 
-Show line number and column number
+Show line number and column number.
 #+begin_src emacs-lisp
   (setq column-number-mode t)
   (setq display-line-numbers t)
   (global-display-line-numbers-mode 1)
+#+end_src
+
+Shift + Arrow to move between windows.
+#+begin_src emacs-lisp
+  (windmove-default-keybindings)
 #+end_src
 
 Install and prepare ~diminish~ to clean up.
@@ -133,9 +138,9 @@ Default Font.
   ;; (setq-default line-spacing 0.2)
 
   (set-face-attribute 'default nil
-                        :family "JetBrainsMono"
-  		      :width 'expanded
-                        :overline nil)
+                      :family "JetBrainsMono"
+  		    :width 'expanded
+                      :overline nil)
 #+end_src
 
 Fix-pitch face.
@@ -154,6 +159,7 @@ Variable-pitch face.
 
 Line highlight colour.
 #+begin_src emacs-lisp
+  (require 'hl-line)
   (set-face-attribute 'hl-line nil
                       :background "azure2")
 #+end_src
@@ -254,8 +260,13 @@ lsp-mode for general language support.
      ((js-ts-mode typescript-ts-mode tsx-ts-mode svelte-mode) . lsp)
      (python-mode . lsp)			; Python
      (java-mode . lsp)			; Java
+     (rust-mode . lsp)
      (lsp-mode . lsp-enable-which-key-integration)
-     (lsp-mode . lsp-lens-mode))
+     (lsp-mode . lsp-lens-mode)
+     (lsp-mode . display-fill-column-indicator-mode)
+     (lsp-mode . (lambda ()
+  		 (setq show-trailing-whitespace t
+      		       fill-column 80))))
     :config
     ;; https://github.com/emacs-lsp/lsp-mode/issues/4473#issuecomment-2308978908
     (setq lsp-rename-use-prepare nil
@@ -286,8 +297,10 @@ company autocompletion.
     :defer t
     :diminish
     :init
-    (setq company-minimum-prefix-length 1
-          company-idle-delay 0.2))
+    (setq company-minimum-prefix-length 3
+          company-idle-delay 0.2)
+    :hook
+    ((company-mode . yas-minor-mode)))
 #+end_src
 
 * Specific Language Setup
@@ -300,7 +313,7 @@ company autocompletion.
     :hook
     ((haskell-mode . interactive-haskell-mode)
      (interactive-haskell-mode . (lambda () (diminish 'interactive-haskell-mode)))
-     (haskell-mode . turn-on-haskell-indent)))
+     (haskell-mode . haskell-indentation-mode)))
 #+end_src
 
 ** OCaml
@@ -427,6 +440,20 @@ Recognize file extensions.
     :defer t)
 
   (use-package svelte-mode
+    :defer t)
+#+end_src
+
+** Rust
+
+#+begin_src emacs-lisp
+  (use-package rust-mode
+    :defer t)
+#+end_src
+
+** Yaml
+
+#+begin_src emacs-lisp
+  (use-package yaml-mode
     :defer t)
 #+end_src
 
